@@ -1,10 +1,9 @@
-/**
- * Created by kn100 on 28/03/17.
- */
 import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +37,19 @@ public class CryptoLib {
             return sf.generateSecret(keySpec);
         }
     }
-
+    public static SecretKey createPuzzleKey() throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeyException
+    {
+        SecureRandom random = new SecureRandom();
+        byte[] firstBitsOfKey = new byte[2];
+        random.nextBytes(firstBitsOfKey);
+        try {
+            SecretKey x = createKey(Arrays.copyOf(firstBitsOfKey,8));
+            return x;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /*
      * Convert a small integer (between 0 and 65535 inclusively) into an array of bytes of length 2.
@@ -105,7 +116,7 @@ public class CryptoLib {
 
         //print the key
         String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-        System.out.println(encodedKey);
+
 
         return secretKey;
     }
