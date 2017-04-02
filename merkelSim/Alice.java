@@ -26,7 +26,7 @@ public class Alice {
 
         //these lines randomize the order they are written to the textfile. Important for security. Otherwise we could
         //discern that line number cracked = puzzle number cracked.
-        List keys = new ArrayList(puzzleSet.keySet());
+        List<Integer> keys = new ArrayList<>(puzzleSet.keySet());
         Collections.shuffle(keys);
 
         System.out.println("Alice init::Writing puzzles into file");
