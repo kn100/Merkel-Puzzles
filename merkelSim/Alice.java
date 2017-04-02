@@ -2,8 +2,7 @@ import javax.crypto.SecretKey;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Alice class
@@ -18,21 +17,26 @@ public class Alice {
     private int puzzleNumber;
 
     /**
-     * init sets Alice up effectively. Alice will make a set of puzzles, and write them down for whoever wants to solve them.
+     * init sets Alice up. Alice will make a set of puzzles, and write them down for whoever wants to solve them.
      * @param filename - where Alice should write the puzzles down
      * @throws IOException - if an error occurs when writing the file. Usually due to permissions in the writing directory.
      */
     public void init(String filename) throws IOException{
         puzzleSet = PuzzleFactory.makePuzzles();
+
+        //these lines randomize the order they are written to the textfile. Important for security. Otherwise we could
+        //discern that line number cracked = puzzle number cracked.
+        List keys = new ArrayList(puzzleSet.keySet());
+        Collections.shuffle(keys);
+
         System.out.println("Alice init::Writing puzzles into file");
-        FileOutputStream fos;
-        fos = new FileOutputStream(filename);
-        for (Map.Entry<Integer, Puzzle> entry : puzzleSet.entrySet()) {
-            fos.write(entry.getValue().getEncryptedPuzzle().getBytes());
-            //write them on new lines
+        FileOutputStream fos = new FileOutputStream(filename);
+
+
+        for(Object o : keys) {
+            fos.write(puzzleSet.get(o).getEncryptedPuzzle().getBytes());
             fos.write("\r\n".getBytes());
         }
-        fos.close();
     }
 
     /**
